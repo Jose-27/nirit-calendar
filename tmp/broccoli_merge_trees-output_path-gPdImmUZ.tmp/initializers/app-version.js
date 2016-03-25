@@ -1,0 +1,1 @@
+/Users/josechavez/Desktop/tt/jo/tmp/broccoli_merge_trees-input_base_path-qLE8hduh.tmp/2/initializers/app-version.js
