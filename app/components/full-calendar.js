@@ -17,6 +17,8 @@ export default Ember.Component.extend({
             },
             defaultview: 'month',
             selectable: true,
+            slotMinutes: 15,
+            defaultEventMinutes:45,
             selectHelper: true,
             select: function(start, end, allDay){
                 var title = prompt('Event Title:');
@@ -33,6 +35,5 @@ export default Ember.Component.extend({
             },
             editable: true
         });
-
     }.on('didInsertElement'),
 });

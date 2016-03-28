@@ -1,2 +1,9 @@
-{{full-calendar}}
+
+      {{full-calendar}}
+    {{#if ergbieurg}}
+      {{login-form}}
+      {{#if errorMessage}}
+        <div class="alert alert-error">{{errorMessage}}</div>
+      {{/if}}
+    {{/if}}
 {{outlet}}

@@ -50,6 +50,8 @@ define('jo/components/full-calendar', ['exports', 'ember'], function (exports, _
                 },
                 defaultview: 'month',
                 selectable: true,
+                slotMinutes: 15,
+                defaultEventMinutes: 45,
                 selectHelper: true,
                 select: function select(start, end, allDay) {
                     var title = prompt('Event Title:');
@@ -68,6 +70,39 @@ define('jo/components/full-calendar', ['exports', 'ember'], function (exports, _
             });
         }).on('didInsertElement')
     });
+});
+define('jo/components/login-form', ['exports', 'ember'], function (exports, _ember) {
+  exports['default'] = _ember['default'].Component.extend({
+
+    loggedIn: (function () {
+      return true;
+    }).on('didInsertElement'),
+    reset: function reset() {
+      this.setProperties({
+        username: "",
+        password: "",
+        errorMessage: ""
+      });
+    },
+
+    login: function login() {
+
+      var self = this,
+          data = this.getProperties('username', 'password');
+
+      // Clear out any error messages.
+      this.set('errorMessage', null);
+
+      _ember['default'].$.post('/auth.json', data).then(function (response) {
+
+        self.set('errorMessage', response.message);
+        if (response.success) {
+          // Save the token and transition to where originally intended.
+          self.set('token', response.token);
+        }
+      });
+    }
+  });
 });
 define('jo/controllers/array', ['exports', 'ember'], function (exports, _ember) {
   exports['default'] = _ember['default'].Controller;
@@ -238,6 +273,17 @@ define("jo/instance-initializers/ember-data", ["exports", "ember-data/-private/i
     initialize: _emberDataPrivateInstanceInitializersInitializeStoreService["default"]
   };
 });
+define('jo/models/quote', ['exports'], function (exports) {
+    var mongoose = require('mongoose'),
+        Schema = mongoose.Schema;
+
+    var QuoteSchema = new Schema({
+        quote: String,
+        author: String
+    });
+
+    module.exports = mongoose.model('Quote', QuoteSchema);
+});
 define('jo/resolver', ['exports', 'ember-resolver'], function (exports, _emberResolver) {
   exports['default'] = _emberResolver['default'];
 });
@@ -261,6 +307,97 @@ define('jo/services/ajax', ['exports', 'ember-ajax/services/ajax'], function (ex
 });
 define("jo/templates/application", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template((function () {
+    var child0 = (function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 5,
+                "column": 6
+              },
+              "end": {
+                "line": 7,
+                "column": 6
+              }
+            },
+            "moduleName": "jo/templates/application.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("        ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("div");
+            dom.setAttribute(el1, "class", "alert alert-error");
+            var el2 = dom.createComment("");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 0, 0);
+            return morphs;
+          },
+          statements: [["content", "errorMessage", ["loc", [null, [6, 39], [6, 55]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "line": 8,
+              "column": 4
+            }
+          },
+          "moduleName": "jo/templates/application.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(2);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          morphs[1] = dom.createMorphAt(fragment, 3, 3, contextualElement);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [["content", "login-form", ["loc", [null, [4, 6], [4, 20]]]], ["block", "if", [["get", "errorMessage", ["loc", [null, [5, 12], [5, 24]]]]], [], 0, null, ["loc", [null, [5, 6], [7, 13]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })();
     return {
       meta: {
         "fragmentReason": {
@@ -275,7 +412,7 @@ define("jo/templates/application", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 3,
+            "line": 10,
             "column": 0
           }
         },
@@ -287,9 +424,13 @@ define("jo/templates/application", ["exports"], function (exports) {
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createTextNode("\n      ");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
@@ -298,15 +439,15 @@ define("jo/templates/application", ["exports"], function (exports) {
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(2);
-        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-        morphs[1] = dom.createMorphAt(fragment, 2, 2, contextualElement);
-        dom.insertBoundary(fragment, 0);
+        var morphs = new Array(3);
+        morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+        morphs[1] = dom.createMorphAt(fragment, 3, 3, contextualElement);
+        morphs[2] = dom.createMorphAt(fragment, 4, 4, contextualElement);
         return morphs;
       },
-      statements: [["content", "full-calendar", ["loc", [null, [1, 0], [1, 17]]]], ["content", "outlet", ["loc", [null, [2, 0], [2, 10]]]]],
+      statements: [["content", "full-calendar", ["loc", [null, [2, 6], [2, 23]]]], ["block", "if", [["get", "ergbieurg", ["loc", [null, [3, 10], [3, 19]]]]], [], 0, null, ["loc", [null, [3, 4], [8, 11]]]], ["content", "outlet", ["loc", [null, [9, 0], [9, 10]]]]],
       locals: [],
-      templates: []
+      templates: [child0]
     };
   })());
 });
@@ -315,7 +456,8 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
     return {
       meta: {
         "fragmentReason": {
-          "name": "triple-curlies"
+          "name": "missing-wrapper",
+          "problems": ["multiple-nodes"]
         },
         "revision": "Ember@2.4.3",
         "loc": {
@@ -325,7 +467,7 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
             "column": 0
           },
           "end": {
-            "line": 2,
+            "line": 3,
             "column": 0
           }
         },
@@ -338,7 +480,246 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "id", "small-calendar");
+        dom.setAttribute(el1, "class", "small-calendar");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
         dom.setAttribute(el1, "id", "calendar");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes() {
+        return [];
+      },
+      statements: [],
+      locals: [],
+      templates: []
+    };
+  })());
+});
+define("jo/templates/components/login-form", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type", "multiple-nodes"]
+        },
+        "revision": "Ember@2.4.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 60,
+            "column": 0
+          }
+        },
+        "moduleName": "jo/templates/components/login-form.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("<form class=\"form-inline\" {{action login on=\"submit\"}}>\n  <h2>Log In</h2>\n  {{input value=username type=\"text\" placeholder=\"Username\"}}\n  {{input value=password type=\"password\" placeholder=\"Password\"}}\n  {{input class=\"btn\" type=\"submit\" value=\"Log In\"}}\n</form>");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "box");
+        var el2 = dom.createTextNode("\n  \n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h2");
+        var el3 = dom.createTextNode("Login");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  \n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("form");
+        dom.setAttribute(el2, "action", "");
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" Login ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "login-form");
+        var el4 = dom.createTextNode("\n      \n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4, "for", "username");
+        var el5 = dom.createTextNode("Username");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "type", "text");
+        dom.setAttribute(el4, "id", "username");
+        dom.setAttribute(el4, "placeholder", "Username");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      \n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4, "for", "password");
+        var el5 = dom.createTextNode("Password");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "type", "password");
+        dom.setAttribute(el4, "id", "password");
+        dom.setAttribute(el4, "placeholder", "Password");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      \n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" Register ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "register-form");
+        var el4 = dom.createTextNode("\n      \n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4, "for", "first-name");
+        var el5 = dom.createTextNode("First Name");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "disabled", "");
+        dom.setAttribute(el4, "type", "text");
+        dom.setAttribute(el4, "id", "first-name");
+        dom.setAttribute(el4, "placeholder", "First Name");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      \n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4, "for", "last-name");
+        var el5 = dom.createTextNode("Last Name");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "disabled", "");
+        dom.setAttribute(el4, "type", "text");
+        dom.setAttribute(el4, "id", "last-name");
+        dom.setAttribute(el4, "placeholder", "Last Name");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      \n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4, "for", "email");
+        var el5 = dom.createTextNode("E-mail Adress");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "disabled", "");
+        dom.setAttribute(el4, "type", "text");
+        dom.setAttribute(el4, "id", "email");
+        dom.setAttribute(el4, "placeholder", "E-mail Address");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      \n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("label");
+        dom.setAttribute(el4, "for", "confirm-email");
+        var el5 = dom.createTextNode("Confirm E-mail Address");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "disabled", "");
+        dom.setAttribute(el4, "type", "text");
+        dom.setAttribute(el4, "id", "confirm-email");
+        dom.setAttribute(el4, "placeholder", "Confirm E-mail Address");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      \n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4, "class", "captcha");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("label");
+        dom.setAttribute(el5, "for", "captcha");
+        var el6 = dom.createTextNode("What is ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("strong");
+        var el7 = dom.createTextNode("10 + 3");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("?");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("input");
+        dom.setAttribute(el5, "disabled", "");
+        dom.setAttribute(el5, "type", "text");
+        dom.setAttribute(el5, "id", "captcha");
+        dom.setAttribute(el5, "placeholder", "Your answer");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        \n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      \n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" Submit ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("input");
+        dom.setAttribute(el3, "type", "submit");
+        dom.setAttribute(el3, "id", "submit");
+        dom.setAttribute(el3, "value", "Login");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" Help ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3, "href", "register.htm");
+        dom.setAttribute(el3, "class", "register");
+        var el4 = dom.createTextNode("Register!");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3, "href", "#");
+        dom.setAttribute(el3, "class", "forgot-password");
+        dom.setAttribute(el3, "title", "Forgot password?");
+        var el4 = dom.createTextNode("Forgot?");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    \n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -385,7 +766,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+3b2af17f"});
+  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+9cfef1d4"});
 }
 
 /* jshint ignore:end */
