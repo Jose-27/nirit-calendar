@@ -7,6 +7,15 @@ define('jo/tests/app.jshint', ['exports'], function (exports) {
     assert.ok(true, 'app.js should pass jshint.');
   });
 });
+define('jo/tests/components/aside-calendar.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - components/aside-calendar.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(false, 'components/aside-calendar.js should pass jshint.\ncomponents/aside-calendar.js: line 8, col 17, \'d\' is defined but never used.\ncomponents/aside-calendar.js: line 9, col 17, \'m\' is defined but never used.\ncomponents/aside-calendar.js: line 10, col 17, \'y\' is defined but never used.\ncomponents/aside-calendar.js: line 11, col 28, \'$\' is not defined.\n\n4 errors');
+  });
+});
 define('jo/tests/components/full-calendar.jshint', ['exports'], function (exports) {
   'use strict';
 
@@ -14,15 +23,6 @@ define('jo/tests/components/full-calendar.jshint', ['exports'], function (export
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(false, 'components/full-calendar.js should pass jshint.\ncomponents/full-calendar.js: line 8, col 17, \'d\' is defined but never used.\ncomponents/full-calendar.js: line 9, col 17, \'m\' is defined but never used.\ncomponents/full-calendar.js: line 10, col 17, \'y\' is defined but never used.\ncomponents/full-calendar.js: line 11, col 28, \'$\' is not defined.\n\n4 errors');
-  });
-});
-define('jo/tests/components/login-form.jshint', ['exports'], function (exports) {
-  'use strict';
-
-  QUnit.module('JSHint - components/login-form.js');
-  QUnit.test('should pass jshint', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/login-form.js should pass jshint.');
   });
 });
 define('jo/tests/helpers/destroy-app', ['exports', 'ember'], function (exports, _ember) {
@@ -118,6 +118,155 @@ define('jo/tests/helpers/start-app.jshint', ['exports'], function (exports) {
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'helpers/start-app.js should pass jshint.');
+  });
+});
+define('jo/tests/integration/components/aside-calendar-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  (0, _emberQunit.moduleForComponent)('aside-calendar', 'Integration | Component | aside calendar', {
+    integration: true
+  });
+
+  (0, _emberQunit.test)('it renders', function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 18
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'aside-calendar', ['loc', [null, [1, 0], [1, 18]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.4.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'aside-calendar', [], [], 0, null, ['loc', [null, [2, 4], [4, 23]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+});
+define('jo/tests/integration/components/aside-calendar-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/aside-calendar-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/aside-calendar-test.js should pass jshint.');
   });
 });
 define('jo/tests/integration/components/full-calendar-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
@@ -267,164 +416,6 @@ define('jo/tests/integration/components/full-calendar-test.jshint', ['exports'],
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'integration/components/full-calendar-test.js should pass jshint.');
-  });
-});
-define('jo/tests/integration/components/login-form-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('login-form', 'Integration | Component | login form', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template((function () {
-      return {
-        meta: {
-          'fragmentReason': {
-            'name': 'missing-wrapper',
-            'problems': ['wrong-type']
-          },
-          'revision': 'Ember@2.4.3',
-          'loc': {
-            'source': null,
-            'start': {
-              'line': 1,
-              'column': 0
-            },
-            'end': {
-              'line': 1,
-              'column': 14
-            }
-          }
-        },
-        isEmpty: false,
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createComment('');
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(1);
-          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-          dom.insertBoundary(fragment, 0);
-          dom.insertBoundary(fragment, null);
-          return morphs;
-        },
-        statements: [['content', 'login-form', ['loc', [null, [1, 0], [1, 14]]]]],
-        locals: [],
-        templates: []
-      };
-    })()));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template((function () {
-      var child0 = (function () {
-        return {
-          meta: {
-            'fragmentReason': false,
-            'revision': 'Ember@2.4.3',
-            'loc': {
-              'source': null,
-              'start': {
-                'line': 2,
-                'column': 4
-              },
-              'end': {
-                'line': 4,
-                'column': 4
-              }
-            }
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode('      template block text\n');
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes() {
-            return [];
-          },
-          statements: [],
-          locals: [],
-          templates: []
-        };
-      })();
-
-      return {
-        meta: {
-          'fragmentReason': {
-            'name': 'missing-wrapper',
-            'problems': ['wrong-type']
-          },
-          'revision': 'Ember@2.4.3',
-          'loc': {
-            'source': null,
-            'start': {
-              'line': 1,
-              'column': 0
-            },
-            'end': {
-              'line': 5,
-              'column': 2
-            }
-          }
-        },
-        isEmpty: false,
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode('\n');
-          dom.appendChild(el0, el1);
-          var el1 = dom.createComment('');
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode('  ');
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(1);
-          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
-          return morphs;
-        },
-        statements: [['block', 'login-form', [], [], 0, null, ['loc', [null, [2, 4], [4, 19]]]]],
-        locals: [],
-        templates: [child0]
-      };
-    })()));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('jo/tests/integration/components/login-form-test.jshint', ['exports'], function (exports) {
-  'use strict';
-
-  QUnit.module('JSHint - integration/components/login-form-test.js');
-  QUnit.test('should pass jshint', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/login-form-test.js should pass jshint.');
-  });
-});
-define('jo/tests/models/quote.jshint', ['exports'], function (exports) {
-  'use strict';
-
-  QUnit.module('JSHint - models/quote.js');
-  QUnit.test('should pass jshint', function (assert) {
-    assert.expect(1);
-    assert.ok(false, 'models/quote.js should pass jshint.\nmodels/quote.js: line 1, col 16, \'require\' is not defined.\nmodels/quote.js: line 9, col 1, \'module\' is not defined.\n\n2 errors');
   });
 });
 define('jo/tests/resolver.jshint', ['exports'], function (exports) {

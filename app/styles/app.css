@@ -1,6 +1,38 @@
+.flexbox{
+    display:flex;
+    flex-direction:row;
+    max-height:100vh;
+}
+.calendar-wrapper{
+    height:100vh;
+    width:400px;
+    background-color:#333333;
+}
+.calendar-wrapper .fc td, .fc th {
+      border-style: none !important;
+  }
+.calendar-wrapper .fc-basic-view .fc-body .fc-row{
+    
+}
 #calendar{
-    width:1300px;
-    float:left;
+    min-width:100vh;
+    max-height:100vh;
+}
+#calendar .fc-toolbar .fc-right {
+    display:none;
+}
+#aside-calendar{
+    padding:20% 0 0;
+    color:white;
+}
+#aside-calendar .fc-day-number{
+    padding-top:20px;
+    text-align:center;
+}
+ .calendar-wrapper .fc-unthemed .fc-today{
+    background:#1695fb;
+    border-radius:50%;
+    height:20px;
 }
 * { box-sizing: border-box }
 html, body {
@@ -14,13 +46,6 @@ html, body {
 body {
   display: table-cell;
   vertical-align: middle;
-}
-.small-calendar{
-  border:1px solid red;
-  float:left;
-display:inline-block;
-  min-height:400px;
-  width:400px;
 }
 .box {
   margin: auto;

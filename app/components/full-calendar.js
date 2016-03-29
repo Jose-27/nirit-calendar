@@ -11,14 +11,13 @@ export default Ember.Component.extend({
                 calendar = $('#calendar');
         return calendar.fullCalendar({
             header:{
-                left: 'prev, next today',
-                center: 'title',
-                right: 'month, agendaWeek,agendaDay'
+                left: 'prev,today,next,title',
+                center: 'month, agendaWeek,agendaDay,year'
             },
             defaultview: 'month',
+            numberOfMonths: 2,
             selectable: true,
-            slotMinutes: 15,
-            defaultEventMinutes:45,
+            slotDuration: '00:05:0',
             selectHelper: true,
             select: function(start, end, allDay){
                 var title = prompt('Event Title:');
