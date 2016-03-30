@@ -454,7 +454,7 @@ define("jo/templates/components/aside-calendar", ["exports"], function (exports)
             "column": 0
           },
           "end": {
-            "line": 4,
+            "line": 7,
             "column": 0
           }
         },
@@ -466,12 +466,21 @@ define("jo/templates/components/aside-calendar", ["exports"], function (exports)
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
-        dom.setAttribute(el1, "class", "calendar-wrapper");
+        dom.setAttribute(el1, "style", "position:relative;");
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2, "id", "aside-calendar");
+        dom.setAttribute(el2, "class", "calendar-wrapper");
+        var el3 = dom.createTextNode("\n");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "id", "aside-calendar");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n");
+        dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
@@ -504,7 +513,7 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
             "column": 0
           },
           "end": {
-            "line": 2,
+            "line": 4,
             "column": 0
           }
         },
@@ -517,7 +526,14 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
-        dom.setAttribute(el1, "id", "calendar");
+        dom.setAttribute(el1, "style", "position:relative;");
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "id", "calendar");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -564,7 +580,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+2276e046"});
+  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+7bf30765"});
 }
 
 /* jshint ignore:end */
