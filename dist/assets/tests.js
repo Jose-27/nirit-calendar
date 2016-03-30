@@ -22,7 +22,7 @@ define('jo/tests/components/full-calendar.jshint', ['exports'], function (export
   QUnit.module('JSHint - components/full-calendar.js');
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'components/full-calendar.js should pass jshint.\ncomponents/full-calendar.js: line 8, col 17, \'d\' is defined but never used.\ncomponents/full-calendar.js: line 9, col 17, \'m\' is defined but never used.\ncomponents/full-calendar.js: line 10, col 17, \'y\' is defined but never used.\ncomponents/full-calendar.js: line 11, col 28, \'$\' is not defined.\n\n4 errors');
+    assert.ok(false, 'components/full-calendar.js should pass jshint.\ncomponents/full-calendar.js: line 10, col 17, \'d\' is defined but never used.\ncomponents/full-calendar.js: line 11, col 17, \'m\' is defined but never used.\ncomponents/full-calendar.js: line 12, col 17, \'y\' is defined but never used.\ncomponents/full-calendar.js: line 14, col 28, \'$\' is not defined.\n\n4 errors');
   });
 });
 define('jo/tests/helpers/destroy-app', ['exports', 'ember'], function (exports, _ember) {
@@ -436,6 +436,15 @@ define('jo/tests/router.jshint', ['exports'], function (exports) {
     assert.ok(true, 'router.js should pass jshint.');
   });
 });
+define('jo/tests/routes/application.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - routes/application.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/application.js should pass jshint.');
+  });
+});
 define('jo/tests/test-helper', ['exports', 'jo/tests/helpers/resolver', 'ember-qunit'], function (exports, _joTestsHelpersResolver, _emberQunit) {
 
   (0, _emberQunit.setResolver)(_joTestsHelpersResolver['default']);
@@ -447,6 +456,27 @@ define('jo/tests/test-helper.jshint', ['exports'], function (exports) {
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'test-helper.js should pass jshint.');
+  });
+});
+define('jo/tests/unit/routes/application-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  (0, _emberQunit.moduleFor)('route:application', 'Unit | Route | application', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+});
+define('jo/tests/unit/routes/application-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/routes/application-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/routes/application-test.js should pass jshint.');
   });
 });
 /* jshint ignore:start */

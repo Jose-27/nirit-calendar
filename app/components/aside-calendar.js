@@ -11,7 +11,6 @@ export default Ember.Component.extend({
                 calendar = $('#aside-calendar');
         return calendar.fullCalendar({
             header:{
-            
                 left: 'title',
             },
             defaultview: 'month',

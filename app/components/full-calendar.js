@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+    newEvent:"",
+    eventTitle:"",
 
     _initializeCalendar: function(){
 
@@ -8,6 +10,7 @@ export default Ember.Component.extend({
                 d = date.getDate(),
                 m = date.getMonth(),
                 y = date.getFullYear(),
+                self = this,
                 calendar = $('#calendar');
         return calendar.fullCalendar({
             header:{
@@ -19,20 +22,17 @@ export default Ember.Component.extend({
             selectable: true,
             slotDuration: '00:05:0',
             selectHelper: true,
-            select: function(start, end, allDay){
-                var title = prompt('Event Title:');
-
-                if (title){
-                    calendar.fullCalendar('renderEvent',{
-                        title: title,
-                        start: start,
-                        end: end,
-                        allDay: allDay
-                    },true);
-                }
-                calendar.fullCalendar('unselect');
-            },
+            /*eventRender: function(event, element) {
+                            element.attr('title', event.title);
+                                    },*/
+            select: self.get('addEvent'),
             editable: true
         });
     }.on('didInsertElement'),
+
+    actions: {
+        addEvent: function(){
+            console.log('serhglr');
+        }
+    }
 });

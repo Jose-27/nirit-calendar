@@ -1,6 +1,9 @@
 <div class="flexbox">
-    {{aside-calendar}}
-    {{full-calendar}}
+    {{aside-calendar
+        events=events
+    }}
+    {{full-calendar
+    events=events}}
 </div>
     {{#if ergbieurg}}
       {{login-form}}
