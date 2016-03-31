@@ -24,15 +24,31 @@ export default Ember.Component.extend({
             selectHelper: true,
             /*eventRender: function(event, element) {
                             element.attr('title', event.title);
-                                    },*/
-            select: self.get('addEvent'),
+            },*/
+            select: function(start, end, allDay){
+                var title = prompt('Event Title:');
+
+                if (title){
+                    calendar.fullCalendar('renderEvent',{
+                        title: title,
+                        start: start,
+                        end: end,
+                        allDay: allDay
+                    },true);
+                }
+                calendar.fullCalendar('unselect');
+            },
+            editable: true,
+            events: this.theEvents,
             editable: true
         });
     }.on('didInsertElement'),
 
     actions: {
         addEvent: function(){
-            console.log('serhglr');
+            var newEvent = {title: this.eventTitle, start: this.newEvent, allDay:false};
+            this.theEvents.pushObject(newEvent);
+            this.$("#calendar").fullCalendar('renderEvent', newEvent, true);
         }
     }
 });

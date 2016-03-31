@@ -9,3 +9,12 @@
                                         <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
                                             </div>
 </div>
+ <label for="title">Title:</label>
+     {{input id="title" class="form-control" value=eventTitle placeholder="Enter event title"}}
+         
+         <label for="event">Event:</label>
+             {{input id="event" class="form-control" value=newEvent placeholder="Enter a new event date"}}
+                 <p>Date must ISO string: Ex. 2015-07-25</p>
+                     
+                     <a class="btn btn-primary" {{action "addEvent"}}>+ Add New Event</a>
+                         

@@ -13,6 +13,7 @@ export default Ember.Component.extend({
             header:{
                 left: 'title',
             },
+            events: this.theEvents,
             defaultview: 'month',
             selectable: true,
         });

@@ -25,15 +25,15 @@
   color: white; }
   #aside-calendar .fc-toolbar .fc-right .fc-today-button {
     display: none; }
+  #aside-calendar .fc-scroller {
+    overflow: hidden !important; }
 
 #aside-calendar .fc-day-number {
   padding-top: 20px;
   text-align: center; }
 
-.calendar-wrapper .fc-unthemed .fc-today {
-  background: #1695fb;
-  border-radius: 50%;
-  height: 20px; }
+#aside-calendar .fc-state-highlight {
+  background: #1695fb; }
 
 * {
   box-sizing: border-box; }

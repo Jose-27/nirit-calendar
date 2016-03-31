@@ -46,6 +46,7 @@ define('jo/components/aside-calendar', ['exports', 'ember'], function (exports, 
                 header: {
                     left: 'title'
                 },
+                events: this.theEvents,
                 defaultview: 'month',
                 selectable: true
             });
@@ -78,15 +79,31 @@ define("jo/components/full-calendar", ["exports", "ember"], function (exports, _
                 selectHelper: true,
                 /*eventRender: function(event, element) {
                                 element.attr('title', event.title);
-                                        },*/
-                select: self.get('addEvent'),
+                },*/
+                select: function select(start, end, allDay) {
+                    var title = prompt('Event Title:');
+
+                    if (title) {
+                        calendar.fullCalendar('renderEvent', {
+                            title: title,
+                            start: start,
+                            end: end,
+                            allDay: allDay
+                        }, true);
+                    }
+                    calendar.fullCalendar('unselect');
+                },
+                editable: true,
+                events: this.theEvents,
                 editable: true
             });
         }).on('didInsertElement'),
 
         actions: {
             addEvent: function addEvent() {
-                console.log('serhglr');
+                var newEvent = { title: this.eventTitle, start: this.newEvent, allDay: false };
+                this.theEvents.pushObject(newEvent);
+                this.$("#calendar").fullCalendar('renderEvent', newEvent, true);
             }
         }
     });
@@ -273,11 +290,11 @@ define('jo/router', ['exports', 'ember', 'jo/config/environment'], function (exp
 
   exports['default'] = Router;
 });
-define("jo/routes/application", ["exports", "ember"], function (exports, _ember) {
-    exports["default"] = _ember["default"].Route.extend({
+define('jo/routes/application', ['exports', 'ember'], function (exports, _ember) {
+    exports['default'] = _ember['default'].Route.extend({
         model: function model() {
             return {
-                events: _ember["default"].A([{ title: "", start: Date.now() }])
+                events: _ember['default'].A([{ title: this.eventTitle, start: Date.now() }])
             };
         }
     });
@@ -301,11 +318,11 @@ define("jo/templates/application", ["exports"], function (exports) {
             "loc": {
               "source": null,
               "start": {
-                "line": 10,
+                "line": 11,
                 "column": 6
               },
               "end": {
-                "line": 12,
+                "line": 13,
                 "column": 6
               }
             },
@@ -333,7 +350,7 @@ define("jo/templates/application", ["exports"], function (exports) {
             morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 0, 0);
             return morphs;
           },
-          statements: [["content", "errorMessage", ["loc", [null, [11, 39], [11, 55]]]]],
+          statements: [["content", "errorMessage", ["loc", [null, [12, 39], [12, 55]]]]],
           locals: [],
           templates: []
         };
@@ -345,11 +362,11 @@ define("jo/templates/application", ["exports"], function (exports) {
           "loc": {
             "source": null,
             "start": {
-              "line": 8,
+              "line": 9,
               "column": 4
             },
             "end": {
-              "line": 13,
+              "line": 14,
               "column": 4
             }
           },
@@ -378,7 +395,7 @@ define("jo/templates/application", ["exports"], function (exports) {
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["content", "login-form", ["loc", [null, [9, 6], [9, 20]]]], ["block", "if", [["get", "errorMessage", ["loc", [null, [10, 12], [10, 24]]]]], [], 0, null, ["loc", [null, [10, 6], [12, 13]]]]],
+        statements: [["content", "login-form", ["loc", [null, [10, 6], [10, 20]]]], ["block", "if", [["get", "errorMessage", ["loc", [null, [11, 12], [11, 24]]]]], [], 0, null, ["loc", [null, [11, 6], [13, 13]]]]],
         locals: [],
         templates: [child0]
       };
@@ -397,7 +414,7 @@ define("jo/templates/application", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 15,
+            "line": 16,
             "column": 0
           }
         },
@@ -441,7 +458,7 @@ define("jo/templates/application", ["exports"], function (exports) {
         morphs[3] = dom.createMorphAt(fragment, 3, 3, contextualElement);
         return morphs;
       },
-      statements: [["inline", "aside-calendar", [], ["events", ["subexpr", "@mut", [["get", "events", ["loc", [null, [3, 15], [3, 21]]]]], [], []]], ["loc", [null, [2, 4], [4, 6]]]], ["inline", "full-calendar", [], ["events", ["subexpr", "@mut", [["get", "events", ["loc", [null, [6, 11], [6, 17]]]]], [], []]], ["loc", [null, [5, 4], [6, 19]]]], ["block", "if", [["get", "ergbieurg", ["loc", [null, [8, 10], [8, 19]]]]], [], 0, null, ["loc", [null, [8, 4], [13, 11]]]], ["content", "outlet", ["loc", [null, [14, 0], [14, 10]]]]],
+      statements: [["content", "aside-calendar", ["loc", [null, [2, 4], [4, 6]]]], ["inline", "full-calendar", [], ["theEvents", ["subexpr", "@mut", [["get", "model.events", ["loc", [null, [6, 18], [6, 30]]]]], [], []]], ["loc", [null, [5, 4], [7, 6]]]], ["block", "if", [["get", "ergbieurg", ["loc", [null, [9, 10], [9, 19]]]]], [], 0, null, ["loc", [null, [9, 4], [14, 11]]]], ["content", "outlet", ["loc", [null, [15, 0], [15, 10]]]]],
       locals: [],
       templates: [child0]
     };
@@ -503,7 +520,7 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
       meta: {
         "fragmentReason": {
           "name": "missing-wrapper",
-          "problems": ["multiple-nodes"]
+          "problems": ["multiple-nodes", "wrong-type"]
         },
         "revision": "Ember@2.4.3",
         "loc": {
@@ -513,7 +530,7 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
             "column": 0
           },
           "end": {
-            "line": 12,
+            "line": 21,
             "column": 0
           }
         },
@@ -576,14 +593,54 @@ define("jo/templates/components/full-calendar", ["exports"], function (exports) 
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n");
+        var el1 = dom.createTextNode("\n ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("label");
+        dom.setAttribute(el1, "for", "title");
+        var el2 = dom.createTextNode("Title:");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n     ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n         \n         ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("label");
+        dom.setAttribute(el1, "for", "event");
+        var el2 = dom.createTextNode("Event:");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n             ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n                 ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("p");
+        var el2 = dom.createTextNode("Date must ISO string: Ex. 2015-07-25");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n                     \n                     ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("a");
+        dom.setAttribute(el1, "class", "btn btn-primary");
+        var el2 = dom.createTextNode("+ Add New Event");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n                         \n");
         dom.appendChild(el0, el1);
         return el0;
       },
-      buildRenderNodes: function buildRenderNodes() {
-        return [];
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [16]);
+        var morphs = new Array(3);
+        morphs[0] = dom.createMorphAt(fragment, 8, 8, contextualElement);
+        morphs[1] = dom.createMorphAt(fragment, 12, 12, contextualElement);
+        morphs[2] = dom.createElementMorph(element0);
+        return morphs;
       },
-      statements: [],
+      statements: [["inline", "input", [], ["id", "title", "class", "form-control", "value", ["subexpr", "@mut", [["get", "eventTitle", ["loc", [null, [13, 51], [13, 61]]]]], [], []], "placeholder", "Enter event title"], ["loc", [null, [13, 5], [13, 95]]]], ["inline", "input", [], ["id", "event", "class", "form-control", "value", ["subexpr", "@mut", [["get", "newEvent", ["loc", [null, [16, 59], [16, 67]]]]], [], []], "placeholder", "Enter a new event date"], ["loc", [null, [16, 13], [16, 106]]]], ["element", "action", ["addEvent"], [], ["loc", [null, [19, 48], [19, 69]]]]],
       locals: [],
       templates: []
     };
@@ -621,7 +678,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+ec8504b1"});
+  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+da4f43f0"});
 }
 
 /* jshint ignore:end */
