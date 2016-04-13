@@ -1,0 +1,1 @@
+/Users/josechavez/Desktop/tt/nirit-calendar/tmp/funnel-input_base_path-Ve54nXwl.tmp/0/bower_components/ember-cli-test-loader/test-loader.js

@@ -1,0 +1,1 @@
+/Users/josechavez/Desktop/tt/nirit-calendar/tmp/funnel-input_base_path-Yx0Um0Jw.tmp/0/adapters/json-api.js

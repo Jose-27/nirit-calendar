@@ -1,12 +1,10 @@
 <div class="flexbox">
-    {{aside-calendar
-       
-    }}
+    {{aside-calendar}}
     {{full-calendar
         theEvents=model.events
     }}
 </div>
-    {{#if ergbieurg}}
+    {{#if hideAll}}
       {{login-form}}
       {{#if errorMessage}}
         <div class="alert alert-error">{{errorMessage}}</div>
