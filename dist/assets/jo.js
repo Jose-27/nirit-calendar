@@ -37,11 +37,11 @@ define('jo/components/aside-calendar', ['exports', 'ember'], function (exports, 
 
         _initializeCalendar: (function () {
 
-            var date = new Date(),
+            /*var date = new Date(),
                 d = date.getDate(),
                 m = date.getMonth(),
-                y = date.getFullYear(),
-                calendar = $('#aside-calendar');
+                y = date.getFullYear(),*/
+            var calendar = this.$('#aside-calendar');
             return calendar.fullCalendar({
                 header: {
                     left: 'title'
@@ -61,17 +61,18 @@ define("jo/components/full-calendar", ["exports", "ember"], function (exports, _
 
         _initializeCalendar: (function () {
 
-            var date = new Date(),
-                d = date.getDate(),
-                m = date.getMonth(),
-                y = date.getFullYear(),
-                self = this,
-                calendar = $('#calendar');
+            /*var date = new Date(),
+                 d = date.getDate(),
+                 m = date.getMonth(),
+                 y = date.getFullYear(),*/
+
+            var calendar = this.$('#calendar');
             return calendar.fullCalendar({
                 header: {
                     left: 'prev,today,next,title',
                     center: 'month, agendaWeek,agendaDay,year'
                 },
+                googleCalendarApiKey: 'AIzaSyBXrecyxcZX96gUyqb8AeH8zuo3GSno5t0',
                 defaultview: 'month',
                 numberOfMonths: 2,
                 selectable: true,
@@ -94,8 +95,9 @@ define("jo/components/full-calendar", ["exports", "ember"], function (exports, _
                     calendar.fullCalendar('unselect');
                 },
                 editable: true,
-                events: this.theEvents,
-                editable: true
+                events: {
+                    googleCalendarId: 'usa__en@holiday.calendar.google.com'
+                }
             });
         }).on('didInsertElement'),
 
@@ -678,7 +680,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+f500c59e"});
+  require("jo/app")["default"].create({"name":"jo","version":"0.0.0+"});
 }
 
 /* jshint ignore:end */

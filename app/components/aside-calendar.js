@@ -4,11 +4,11 @@ export default Ember.Component.extend({
 
     _initializeCalendar: function(){
 
-            var date = new Date(),
+            /*var date = new Date(),
                 d = date.getDate(),
                 m = date.getMonth(),
-                y = date.getFullYear(),
-                calendar = $('#aside-calendar');
+                y = date.getFullYear(),*/
+                var calendar = this.$('#aside-calendar');
         return calendar.fullCalendar({
             header:{
                 left: 'title',
