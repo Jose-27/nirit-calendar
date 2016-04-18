@@ -1,0 +1,1 @@
+/home/jo/dev/nirit-calendar/tmp/config_replace-output_path-PN58ORp6.tmp/app-config.js

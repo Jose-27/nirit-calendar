@@ -1,0 +1,1 @@
+/home/jo/dev/nirit-calendar/tmp/creator-output_path-7097bKKX.tmp/version.js

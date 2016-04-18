@@ -1,0 +1,1 @@
+/home/jo/dev/nirit-calendar/tmp/broccoli_merge_trees-input_base_path-tSC2Ppqn.tmp/12/initializers/export-application-global.js

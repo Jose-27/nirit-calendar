@@ -1,0 +1,1 @@
+/home/jo/dev/nirit-calendar/tmp/config_replace-output_path-JqWQbxf0.tmp/vendor-suffix.js

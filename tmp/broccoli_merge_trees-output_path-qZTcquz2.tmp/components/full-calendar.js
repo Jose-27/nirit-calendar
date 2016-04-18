@@ -1,0 +1,1 @@
+/home/jo/dev/nirit-calendar/app/components/full-calendar.js

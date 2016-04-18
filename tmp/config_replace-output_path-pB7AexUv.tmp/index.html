@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <base href="/" />
+<meta name="jo/config/environment" content="%7B%22modulePrefix%22%3A%22jo%22%2C%22environment%22%3A%22development%22%2C%22baseURL%22%3A%22/%22%2C%22locationType%22%3A%22auto%22%2C%22EmberENV%22%3A%7B%22FEATURES%22%3A%7B%7D%7D%2C%22APP%22%3A%7B%22name%22%3A%22jo%22%2C%22version%22%3A%220.0.0+7584f6ba%22%7D%2C%22exportApplicationGlobal%22%3Atrue%7D" />
+<script src="/ember-cli-live-reload.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="assets/vendor.css">
+    <link rel="stylesheet" href="assets/jo.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.6.1/fullcalendar.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css">
+
+    
+  </head>
+  <body>
+    
+
+    <script src="assets/vendor.js"></script>
+    <script src="assets/jo.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.js"></script>
+    <!--TODO create a file just for this script-->
+    <script>
+    /*calendar v2.6.1 Google Calendar Plugin
+    * Docs & License: http://fullcalendar.io/
+    * (c) 2015 Adam Shaw
+    */
+
+    (function(factory) {
+        if (typeof define === 'function' && define.amd) {
+            define([ 'jquery' ], factory);
+        }
+        else if (typeof exports === 'object') { // Node/CommonJS
+            module.exports = factory(require('jquery'));
+        }
+        else {
+            factory(jQuery);
+        }
+    })(function($) {
+
+
+        var API_BASE = 'https://www.googleapis.com/calendar/v3/calendars';
+        var FC = $.fullCalendar;
+        var applyAll = FC.applyAll;
+
+
+        FC.sourceNormalizers.push(function(sourceOptions) {
+            var googleCalendarId = sourceOptions.googleCalendarId;
+            var url = sourceOptions.url;
+            var match;
+
+            // if the Google Calendar ID hasn't been explicitly defined
+            if (!googleCalendarId && url) {
+
+                // detect if the ID was specified as a single string.
+                // will match calendars like "asdf1234@calendar.google.com" in addition to person email calendars.
+                if (/^[^\/]+@([^\/\.]+\.)*(google|googlemail|gmail)\.com$/.test(url)) {
+                    googleCalendarId = url;
+                }
+                // try to scrape it out of a V1 or V3 API feed URL
+                else if (
+                        (match = /^https:\/\/www.googleapis.com\/calendar\/v3\/calendars\/([^\/]*)/.exec(url)) ||
+                        (match = /^https?:\/\/www.google.com\/calendar\/feeds\/([^\/]*)/.exec(url))
+                        ) {
+                    googleCalendarId = decodeURIComponent(match[1]);
+                }
+
+                if (googleCalendarId) {
+                    sourceOptions.googleCalendarId = googleCalendarId;
+                }
+            }
+
+
+            if (googleCalendarId) { // is this a Google Calendar?
+
+                // make each Google Calendar source uneditable by default
+                if (sourceOptions.editable == null) {
+                    sourceOptions.editable = false;
+                }
+
+                // We want removeEventSource to work, but it won't know about the googleCalendarId primitive.
+                // Shoehorn it into the url, which will function as the unique primitive. Won't cause side effects.
+                // This hack is obsolete since 2.2.3, but keep it so this plugin file is compatible with old versions.
+                sourceOptions.url = googleCalendarId;
+            }
+        });
+
+
+        FC.sourceFetchers.push(function(sourceOptions, start, end, timezone) {
+            if (sourceOptions.googleCalendarId) {
+                return transformOptions(sourceOptions, start, end, timezone, this); // `this` is the calendar
+            }
+        });
+
+
+        function transformOptions(sourceOptions, start, end, timezone, calendar) {
+            var url = API_BASE + '/' + encodeURIComponent(sourceOptions.googleCalendarId) + '/events?callback=?'; // jsonp
+            var apiKey = sourceOptions.googleCalendarApiKey || calendar.options.googleCalendarApiKey;
+            var success = sourceOptions.success;
+            var data;
+            var timezoneArg; // populated when a specific timezone. escaped to Google's liking
+
+            function reportError(message, apiErrorObjs) {
+                var errorObjs = apiErrorObjs || [ { message: message } ]; // to be passed into error handlers
+
+                // call error handlers
+                (sourceOptions.googleCalendarError || $.noop).apply(calendar, errorObjs);
+                (calendar.options.googleCalendarError || $.noop).apply(calendar, errorObjs);
+
+                // print error to debug console
+                FC.warn.apply(null, [ message ].concat(apiErrorObjs || []));
+            }
+
+            if (!apiKey) {
+                reportError("Specify a googleCalendarApiKey. See http://fullcalendar.io/docs/google_calendar/");
+                return {}; // an empty source to use instead. won't fetch anything.
+            }
+
+            // The API expects an ISO8601 datetime with a time and timezone part.
+            // Since the calendar's timezone offset isn't always known, request the date in UTC and pad it by a day on each
+            // side, guaranteeing we will receive all events in the desired range, albeit a superset.
+            // .utc() will set a zone and give it a 00:00:00 time.
+            if (!start.hasZone()) {
+                start = start.clone().utc().add(-1, 'day');
+            }
+            if (!end.hasZone()) {
+                end = end.clone().utc().add(1, 'day');
+            }
+
+            // when sending timezone names to Google, only accepts underscores, not spaces
+            if (timezone && timezone != 'local') {
+                timezoneArg = timezone.replace(' ', '_');
+            }
+
+            data = $.extend({}, sourceOptions.data || {}, {
+                key: apiKey,
+                timeMin: start.format(),
+                timeMax: end.format(),
+                timeZone: timezoneArg,
+                singleEvents: true,
+                maxResults: 9999
+            });
+
+            return $.extend({}, sourceOptions, {
+                googleCalendarId: null, // prevents source-normalizing from happening again
+                url: url,
+                data: data,
+                startParam: false, // `false` omits this parameter. we already included it above
+                endParam: false, // same
+                timezoneParam: false, // same
+                success: function(data) {
+                    var events = [];
+                    var successArgs;
+                    var successRes;
+
+                    if (data.error) {
+                        reportError('Google Calendar API: ' + data.error.message, data.error.errors);
+                    }
+                    else if (data.items) {
+                        $.each(data.items, function(i, entry) {
+                            var url = entry.htmlLink;
+
+                            // make the URLs for each event show times in the correct timezone
+                            if (timezoneArg) {
+                                url = injectQsComponent(url, 'ctz=' + timezoneArg);
+                            }
+
+                            events.push({
+                                id: entry.id,
+                                title: entry.summary,
+                                start: entry.start.dateTime || entry.start.date, // try timed. will fall back to all-day
+                                end: entry.end.dateTime || entry.end.date, // same
+                                url: url,
+                                location: entry.location,
+                                description: entry.description
+                            });
+                        });
+
+                        // call the success handler(s) and allow it to return a new events array
+                        successArgs = [ events ].concat(Array.prototype.slice.call(arguments, 1)); // forward other jq args
+                        successRes = applyAll(success, this, successArgs);
+                        if ($.isArray(successRes)) {
+                            return successRes;
+                        }
+                    }
+
+                    return events;
+                }
+            });
+        }
+
+
+        // Injects a string like "arg=value" into the querystring of a URL
+        function injectQsComponent(url, component) {
+            // inject it after the querystring but before the fragment
+            return url.replace(/(\?.*?)?(#|$)/, function(whole, qs, hash) {
+                return (qs ? qs + '&' : '?') + component + hash;
+            });
+        }
+
+
+    });
+    </script>
+<script>
+/*!
+ * fullcalendar-columns v1.6
+ * Docs & License: https://github.com/mherrmann/fullcalendar-columns
+ * (c) 2015 Michael Herrmann
+ */
+
+(function($, moment) {
+    var fc = $.fullCalendar;
+    var AgendaView = fc.views.agenda.class || fc.views.agenda;
+    fc.views.multiColAgenda = AgendaView.extend({
+        originalEvents: null,
+        fakeEvents: null,
+        initialize: function() {
+            this.numColumns = this.opt('numColumns');
+            this.columnHeaders = this.opt('columnHeaders');
+            AgendaView.prototype.initialize.call(this);
+            this._monkeyPatchGridRendering();
+        },
+        renderEvents: function(events) {
+            this.originalEvents = {};
+            this.fakeEvents = [];
+            for (var i = 0; i < events.length; i++) {
+                var event = events[i];
+                this.originalEvents[event._id] = event;
+                this.fakeEvents.push(this._computeFakeEvent(event));
+            }
+            return AgendaView.prototype.renderEvents.call(
+                this, this.fakeEvents
+            );
+        },
+        trigger: function(name, thisObj) {
+            var args = Array.prototype.slice.call(arguments);
+            if (name == 'eventRender' || name == 'eventAfterRender'
+                || name == 'eventDestroy' || name == 'eventClick'
+                || name == 'eventMouseover' || name == 'eventMouseout')
+                args[2] = this.originalEvents[args[2]._id];
+            else if (name == 'dayClick' || name == 'dayRightclick') {
+                var date = this._computeOriginalEvent({ start: args[2] });
+                args[2] = date.start;
+                args[2].column = date.column;
+            }
+            return AgendaView.prototype.trigger.apply(this, args);
+        },
+        reportEventResize: function(event, location, largeUnit, el, ev) {
+            return this._reportEventReschedule(
+                'reportEventResize', event, location, largeUnit, el, ev
+            );
+        },
+        reportEventDrop: function(event, location, largeUnit, el, ev) {
+            return this._reportEventReschedule(
+                'reportEventDrop', event, location, largeUnit, el, ev
+            );
+        },
+        updateEvent: function(event) {
+            $.extend(
+                this._getFakeEvent(event._id), this._computeFakeEvent(event)
+            );
+        },
+        computeRange: function(date) {
+            var result = AgendaView.prototype.computeRange.call(this, date);
+            var daysAvailable =
+                this._countNonHiddenDaysBetween(result.start, result.end);
+            var daysRequired = daysAvailable * this.numColumns;
+            result.end = this._addNonHiddenDays(result.start, daysRequired);
+            return result;
+        },
+        _monkeyPatchGridRendering: function() {
+            var that = this;
+            var origHeadCellHtml = this.timeGrid.headCellHtml;
+            this.timeGrid.headCellHtml = function(cell) {
+                /*
+                 * Make multiple day header cells (each for one column) appear
+                 * as one. The easiest way to do this would be to just render
+                 * a single header cell with colspan=this.numColumns. However,
+                 * this leads to misalignment between the day header cells and
+                 * the events table. To get around this, we do render the same
+                 * number of <th> cells as FullCalendar, but only fill the first
+                 * one:
+                 */
+                var cellOrig = that._computeOriginalEvent(cell);
+                var $html = $(origHeadCellHtml.call(this, cellOrig));
+                var isFirstCellForDay = cellOrig.column == 0;
+                var isLastCellForDay = cellOrig.column == that.numColumns - 1;
+
+                var html = '';
+                if (isFirstCellForDay) {
+                    // Make the cell appear centered:
+                    var posPercent = 100 * that.numColumns;
+                    html = '<div style="position: relative; width: '
+                           + posPercent + '%;text-align:center;">'
+                           + $html.html() + '</div>';
+                } else {
+                    html = '<div>&nbsp;</div>';
+                    $html.css('border-left-width', 0);
+                }
+                if (! isLastCellForDay)
+                    $html.css('border-right-width', 0);
+                if (that.columnHeaders) {
+                    // Use the prefix 'fce-col-' (as in "FullCalendar
+                    // extension") for classes pertaining only to
+                    // fullcalendar-columns:
+                    html += '<div class="fce-col-header">' +
+                            that.columnHeaders[cellOrig.column] + '</div>';
+                }
+                $html.html(html);
+                return $html[0].outerHTML;
+            };
+            var origGetDayClasses = this.timeGrid.getDayClasses;
+            this.timeGrid.getDayClasses = function(date) {
+                var dateCol = that._computeOriginalEvent({ start: date });
+                return origGetDayClasses.call(this, dateCol.start);
+            };
+        },
+        _computeFakeEvent: function(event) {
+            var result = $.extend({}, event);
+            var start = this.calendar.moment(event.start);
+            if (start >= this.start) {
+                var daysDelta =
+                    moment.duration(event.start - this.start).days();
+                var fakeDayOffset = daysDelta * this.numColumns + event.column;
+                result.start = this._addNonHiddenDays(
+                    start.subtract(daysDelta, 'days'), fakeDayOffset
+                );
+                if ('end' in event) {
+                    var end = this.calendar.moment(event.end);
+                    result.end = this._addNonHiddenDays(
+                        end.subtract(daysDelta, 'days'), fakeDayOffset
+                    );
+                }
+            }
+            return result;
+        },
+        _addNonHiddenDays: function(date, deltaDays) {
+            var result = this.calendar.moment(date);
+            for (var i=0; i < deltaDays; i++)
+                result = this.skipHiddenDays(result.add(1, 'day'));
+            return result;
+        },
+        _countNonHiddenDaysBetween: function(date1, date2) {
+            for (var result=0; date1.isBefore(date2, 'day'); result++)
+                date1 = this._addNonHiddenDays(date1, 1);
+            return result;
+        },
+        _computeOriginalEvent: function(event) {
+            var result = $.extend({}, event);
+            var start = this.calendar.moment(event.start);
+            if (start >= this.start) {
+                var fakeDayOffset =
+                    this._countNonHiddenDaysBetween(this.start, start);
+                result.column = fakeDayOffset % this.numColumns;
+                var daysDelta = start.diff(this.start, 'days');
+                var days = Math.floor(fakeDayOffset / this.numColumns);
+                result.start = this._addNonHiddenDays(
+                    start.subtract(daysDelta, 'days'), days
+                );
+                if ('end' in event) {
+                    var end = this.calendar.moment(event.end);
+                    result.end = this._addNonHiddenDays(
+                        end.subtract(daysDelta, 'days'), days
+                    );
+                }
+            }
+            return result;
+        },
+        _getFakeEvent: function(_id) {
+            for (var i=0; i < this.fakeEvents.length; i++)
+                if (this.fakeEvents[i]._id == _id)
+                    return this.fakeEvents[i];
+        },
+        _reportEventReschedule: function(
+            rescheduleType, fakeEvent, location, largeUnit, el, ev
+        ) {
+            fakeEvent.start = location.start.clone();
+            fakeEvent.end = location.end.clone();
+            var event = this.originalEvents[fakeEvent._id];
+            location = this._computeOriginalEvent(location);
+            event.column = location.column;
+            return AgendaView.prototype[rescheduleType].call(
+                this, event, location, largeUnit, el, ev
+            );
+        }
+    });
+    var origFullCalendar = $.fn.fullCalendar;
+    $.fn.fullCalendar = function(options) {
+        if (options == 'updateEvent') { // Required by multiColAgenda
+            var view = origFullCalendar.call(this, 'getView');
+            if (view.updateEvent)
+                view.updateEvent(arguments[1]);
+        }
+        return origFullCalendar.apply(this, arguments);
+    };
+})(jQuery, moment);
+</script>
+
+<style>
+
+    body {
+        margin: 0px 0px;
+        padding: 0;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        font-size: 14px;
+    }
+
+    #calendar {
+        max-width: 100%;
+        height:100vh;
+        margin: 0 auto;
+    }
+
+</style>
+    
+  </body>
+</html>
