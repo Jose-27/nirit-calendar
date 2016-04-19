@@ -1,0 +1,1 @@
+/Users/josechavez/Desktop/tt/nirit-calendar/bower_components/ember-cli-test-loader/test-loader.js

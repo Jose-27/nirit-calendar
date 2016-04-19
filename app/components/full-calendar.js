@@ -29,6 +29,7 @@ export default Ember.Component.extend({
                     columnHeaders: ['Col. 1', 'Col. 2']
                 }
             },
+            slotDuration: '00:15:01',
             googleCalendarApiKey: 'AIzaSyBXrecyxcZX96gUyqb8AeH8zuo3GSno5t0',
             events: {
                 googleCalendarId: 'usa__en@holiday.calendar.google.com',
